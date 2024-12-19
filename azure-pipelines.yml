@@ -1,0 +1,115 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+- group: arm_service_connection
+- group: subscription_id
+
+parameters:
+- name: environments
+  type: object
+  default:
+  - name: dev
+    arm_connection: '$(dev_arm_service_connections)'
+    subscription_id: '$(dev_subscription_id)'
+  - name: prod
+    arm_connection: '$(prod_arm_service_connections)'
+    subscription_id: '$(prod_subscription_id)'
+
+stages:
+- ${{ each environment in parameters.environments}}:
+  - stage: Plan${{environment.name}}
+    jobs:
+    - job: Plan
+      steps:
+      - task: AzureCLI@2
+        inputs:
+          azureSubscription: '${{environment.arm_connection}}'
+          scriptType: 'bash'
+          scriptLocation: 'inlineScript'
+          inlineScript: |
+            echo "##vso[task.setvariable variable=AZURE_CLIENT_ID]$servicePrincipalId" 
+            echo "##vso[task.setvariable variable=AZURE_ID_TOKEN]$idToken"
+            echo "##vso[task.setvariable variable=AZURE_TENANT_ID]$tenantId"
+          addSpnToEnvironment: true
+      - task: Bash@3
+        inputs:
+          targetType: 'inline'
+          script: 'az login --service-principal -u $AZURE_CLIENT_ID --tenant $AZURE_TENANT_ID --allow-no-subscriptions --federated-token $AZURE_ID_TOKEN'
+      - task: TerraformInstaller@1
+        inputs:
+          terraformVersion: 'latest'
+      - checkout: self
+        displayName: 'Checkout repo'
+      - task: TerraformTaskV4@4
+        inputs:
+          provider: 'azurerm'
+          command: 'init'
+          backendServiceArm: '${{environment.arm_connection}}'
+          backendAzureRmResourceGroupName: 'coreinfra-rg'
+          backendAzureRmStorageAccountName: 'dapalphainfra${{environment.name}}'
+          backendAzureRmContainerName: 'tfstate'
+          backendAzureRmKey: 'infrastructure.terraform.tfstate'
+      - task: TerraformTaskV4@4
+        inputs:
+          provider: 'azurerm'
+          command: 'plan'
+          commandOptions: '-out main.tfout -var="environment=${{environment.name}}" -var="subscription_id=${{environment.subscription_id}}"'
+          environmentServiceNameAzureRM: '${{environment.arm_connection}}'
+      - task: PublishPipelineArtifact@1
+        inputs:
+          targetPath: 'main.tfout'
+          artifact: 'TerraformPlans${{environment.name}}'
+          publishLocation: 'pipeline'
+  - stage: Apply${{environment.name}}
+    jobs:
+    - deployment: DeployTerraform
+      environment: ${{environment.name}}
+    - job: Apply
+      steps:
+      - task: AzureCLI@2
+        inputs:
+          azureSubscription: '${{environment.arm_connection}}'
+          scriptType: 'bash'
+          scriptLocation: 'inlineScript'
+          inlineScript: |
+            echo "##vso[task.setvariable variable=AZURE_CLIENT_ID]$servicePrincipalId" 
+            echo "##vso[task.setvariable variable=AZURE_ID_TOKEN]$idToken"
+            echo "##vso[task.setvariable variable=AZURE_TENANT_ID]$tenantId"
+          addSpnToEnvironment: true
+      - task: Bash@3
+        inputs:
+          targetType: 'inline'
+          script: 'az login --service-principal -u $AZURE_CLIENT_ID --tenant $AZURE_TENANT_ID --allow-no-subscriptions --federated-token $AZURE_ID_TOKEN'
+      - task: TerraformInstaller@1
+        inputs:
+          terraformVersion: 'latest'
+      - checkout: self
+        displayName: 'Checkout repo'
+      - task: TerraformTaskV4@4
+        inputs:
+          provider: 'azurerm'
+          command: 'init'
+          backendServiceArm: '${{environment.arm_connection}}'
+          backendAzureRmResourceGroupName: 'coreinfra-rg'
+          backendAzureRmStorageAccountName: 'dapalphainfra${{environment.name}}'
+          backendAzureRmContainerName: 'tfstate'
+          backendAzureRmKey: 'infrastructure.terraform.tfstate'
+      - task: DownloadPipelineArtifact@2
+        inputs:
+          artifact: 'TerraformPlans${{environment.name}}'
+          targetPath: '$(Pipeline.Workspace)'
+      - task: TerraformTaskV4@4
+        inputs:
+          provider: 'azurerm'
+          command: 'apply'
+          commandOptions: '$(Pipeline.Workspace)/main.tfout'
+          environmentServiceNameAzureRM: '${{environment.arm_connection}}'

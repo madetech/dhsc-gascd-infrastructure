@@ -1,0 +1,5 @@
+subscription_id = "2466c36e-08aa-4500-80a1-68f1a1492de9"
+storage_account_name = "dapalphainfradev"
+resource_group_name = "coreinfra-rg"
+container_name = "tfstate"
+key = "infrastructure.terraform.tfstate"
