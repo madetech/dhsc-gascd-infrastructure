@@ -1,7 +1,7 @@
 # Variables - move to seperate file when too many
 variable "resource_prefix" {
   description = "Prefix for all resources"
-  default     = "dapalpha"
+  default     = "gascdbeta"
 }
 
 variable "environment" {

@@ -85,7 +85,7 @@ resource "azurerm_linux_function_app" "func_app" {
 
 }
 
-resource "azuread_application_redirect_uris" "func_dap_alpha_auth_redirect_uris" {
+resource "azuread_application_redirect_uris" "func_gascd_beta_auth_redirect_uris" {
   application_id = var.app_registration_function_id
   type           = "Web"
   redirect_uris = [
