@@ -6,12 +6,12 @@ variable "tenant_id" {}
 variable "adf_object_id" {}
 
 resource "azuread_group" "secret_readers" {
-  display_name     = format("%s - %s", "GASCD Beta - Secret readers", upper(var.environment))
+  display_name     = format("%s - %s", "DAP Alpha - Secret readers", upper(var.environment))
   security_enabled = true
 }
 
 resource "azuread_group" "kv_admins" {
-  display_name     = format("%s - %s", "GASCD Beta - Key vault admin", upper(var.environment))
+  display_name     = format("%s - %s", "DAP Alpha - Key vault admin", upper(var.environment))
   security_enabled = true
 }
 
