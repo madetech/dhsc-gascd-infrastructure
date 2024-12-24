@@ -51,7 +51,7 @@ resource "azurerm_linux_web_app" "dap-alpha-app" {
     identity_ids = [azurerm_user_assigned_identity.dap_alpha_assigned_identity.id]
   }
   app_settings = {
-    "CONTAINER_PORT"    = 8080
+    "CONTAINER_PORT"    = 80
     "FUNCTION_BASE_URL" = var.function_app_url
   }
   auth_settings_v2 {
