@@ -256,66 +256,66 @@ module "datalake" {
 
 }
 
-module "databricks_workspace" {
-  source                   = "./modules/databricks_workspace_data"
-  environment              = var.environment
-  resource_prefix          = var.resource_prefix
-  resource_group_name      = azurerm_resource_group.rg_data.name
-  location                 = azurerm_resource_group.rg_data.location
-  data_factory_identity_id = azurerm_data_factory.adf_data.identity[0].principal_id
-}
-
-module "databricks_cluster" {
-  source                      = "./modules/databricks_data"
-  environment                 = var.environment
-  resource_prefix             = var.resource_prefix
-  resource_group_name         = azurerm_resource_group.rg_data.name
-  workspace_url               = module.databricks_workspace.workspace_url
-  azure_msi_flag              = var.azure_msi_flag
-  workspace_id                = module.databricks_workspace.workspace_id
-  storage_account_name        = azurerm_storage_account.sc_datalake.name               # Alpha lake
-  string_value                = azurerm_storage_account.sc_datalake.primary_access_key # Alpha lake
-  drop_storage_account_name   = module.datalake.drop_storage_account_name
-  drop_primary_access_key     = module.datalake.drop_primary_access_key
-  bronze_storage_account_name = module.datalake.bronze_storage_account_name
-  bronze_primary_access_key   = module.datalake.bronze_primary_access_key
-  silver_storage_account_name = module.datalake.silver_storage_account_name
-  silver_primary_access_key   = module.datalake.silver_primary_access_key
-  gold_storage_account_name   = module.datalake.gold_storage_account_name
-  gold_primary_access_key     = module.datalake.gold_primary_access_key
-  spark_version               = var.dbx_spark_version
-}
-
-module "databricks_workspace_ai" {
-  source                   = "./modules/databricks_workspace_ai"
-  environment              = var.environment
-  resource_prefix          = var.resource_prefix
-  resource_group_name      = azurerm_resource_group.rg_ai.name
-  location                 = azurerm_resource_group.rg_ai.location
-  data_factory_identity_id = azurerm_data_factory.adf_data.identity[0].principal_id
-}
-
-module "databricks_cluster_ai" {
-  source                      = "./modules/databricks_ai"
-  environment                 = var.environment
-  resource_prefix             = var.resource_prefix
-  resource_group_name         = azurerm_resource_group.rg_ai.name
-  workspace_url               = module.databricks_workspace_ai.workspace_url
-  azure_msi_flag              = var.azure_msi_flag
-  workspace_id                = module.databricks_workspace_ai.workspace_id
-  storage_account_name        = azurerm_storage_account.sc_datalake.name               # Alpha lake
-  string_value                = azurerm_storage_account.sc_datalake.primary_access_key # Alpha lake
-  drop_storage_account_name   = module.datalake.drop_storage_account_name
-  drop_primary_access_key     = module.datalake.drop_primary_access_key
-  bronze_storage_account_name = module.datalake.bronze_storage_account_name
-  bronze_primary_access_key   = module.datalake.bronze_primary_access_key
-  silver_storage_account_name = module.datalake.silver_storage_account_name
-  silver_primary_access_key   = module.datalake.silver_primary_access_key
-  gold_storage_account_name   = module.datalake.gold_storage_account_name
-  gold_primary_access_key     = module.datalake.gold_primary_access_key
-  spark_version               = var.dbx_spark_version
-  spark_version_gpu           = var.dbx_spark_version_gpu
-}
+#module "databricks_workspace" {
+#  source                   = "./modules/databricks_workspace_data"
+#  environment              = var.environment
+#  resource_prefix          = var.resource_prefix
+#  resource_group_name      = azurerm_resource_group.rg_data.name
+#  location                 = azurerm_resource_group.rg_data.location
+#  data_factory_identity_id = azurerm_data_factory.adf_data.identity[0].principal_id
+#}
+#
+#module "databricks_cluster" {
+#  source                      = "./modules/databricks_data"
+#  environment                 = var.environment
+#  resource_prefix             = var.resource_prefix
+#  resource_group_name         = azurerm_resource_group.rg_data.name
+#  workspace_url               = module.databricks_workspace.workspace_url
+#  azure_msi_flag              = var.azure_msi_flag
+#  workspace_id                = module.databricks_workspace.workspace_id
+#  storage_account_name        = azurerm_storage_account.sc_datalake.name               # Alpha lake
+#  string_value                = azurerm_storage_account.sc_datalake.primary_access_key # Alpha lake
+#  drop_storage_account_name   = module.datalake.drop_storage_account_name
+#  drop_primary_access_key     = module.datalake.drop_primary_access_key
+#  bronze_storage_account_name = module.datalake.bronze_storage_account_name
+#  bronze_primary_access_key   = module.datalake.bronze_primary_access_key
+#  silver_storage_account_name = module.datalake.silver_storage_account_name
+#  silver_primary_access_key   = module.datalake.silver_primary_access_key
+#  gold_storage_account_name   = module.datalake.gold_storage_account_name
+#  gold_primary_access_key     = module.datalake.gold_primary_access_key
+#  spark_version               = var.dbx_spark_version
+#}
+#
+#module "databricks_workspace_ai" {
+#  source                   = "./modules/databricks_workspace_ai"
+#  environment              = var.environment
+#  resource_prefix          = var.resource_prefix
+#  resource_group_name      = azurerm_resource_group.rg_ai.name
+#  location                 = azurerm_resource_group.rg_ai.location
+#  data_factory_identity_id = azurerm_data_factory.adf_data.identity[0].principal_id
+#}
+#
+#module "databricks_cluster_ai" {
+#  source                      = "./modules/databricks_ai"
+#  environment                 = var.environment
+#  resource_prefix             = var.resource_prefix
+#  resource_group_name         = azurerm_resource_group.rg_ai.name
+#  workspace_url               = module.databricks_workspace_ai.workspace_url
+#  azure_msi_flag              = var.azure_msi_flag
+#  workspace_id                = module.databricks_workspace_ai.workspace_id
+#  storage_account_name        = azurerm_storage_account.sc_datalake.name               # Alpha lake
+#  string_value                = azurerm_storage_account.sc_datalake.primary_access_key # Alpha lake
+#  drop_storage_account_name   = module.datalake.drop_storage_account_name
+#  drop_primary_access_key     = module.datalake.drop_primary_access_key
+#  bronze_storage_account_name = module.datalake.bronze_storage_account_name
+#  bronze_primary_access_key   = module.datalake.bronze_primary_access_key
+#  silver_storage_account_name = module.datalake.silver_storage_account_name
+#  silver_primary_access_key   = module.datalake.silver_primary_access_key
+#  gold_storage_account_name   = module.datalake.gold_storage_account_name
+#  gold_primary_access_key     = module.datalake.gold_primary_access_key
+#  spark_version               = var.dbx_spark_version
+#  spark_version_gpu           = var.dbx_spark_version_gpu
+#}
 
 # OpenAI resources
 module "openai" {
