@@ -100,11 +100,6 @@ resource "databricks_cluster" "dbx_ai_cpu_cluster" {
   databricks_secret.dbx_secret_datalake, databricks_secret.dbx_secret_drop_datalake]
 }
 
-#data "databricks_spark_version" "gpu_ml" {
-#  gpu = true
-#  ml  = true
-#}
-#
 #resource "databricks_cluster" "dbx_ai_gpu_cluster" {
 #  cluster_name            = "${var.resource_prefix}-dbx-ai-gpu-cluster-${var.environment}"
 #  spark_version           = var.spark_version_gpu # Ensure compatibility with ML workloads

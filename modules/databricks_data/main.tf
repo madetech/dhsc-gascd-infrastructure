@@ -31,24 +31,6 @@ provider "databricks" {
   azure_use_msi               = var.azure_msi_flag
 }
 
-data "databricks_spark_version" "latest_lts" {
-  long_term_support = true
-
-  depends_on = [
-    var.workspace_url
-  ]
-}
-
-# ML runtime
-data "databricks_spark_version" "latest_lts_ml" {
-  long_term_support = true
-  ml                = true
-
-  depends_on = [
-    var.workspace_url
-  ]
-}
-
 resource "databricks_secret_scope" "dbx_secret_scope" {
   name = "infrascope"
 }
