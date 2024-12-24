@@ -38,22 +38,22 @@ resource "azurerm_resource_group" "rg_core" {
 
 # Entra groups
 resource "azuread_group" "sql_admin_group" {
-  display_name     = format("%s - %s", "GASCD Beta - SQL Admins", upper(var.environment))
+  display_name     = format("%s - %s", "DAP Alpha - SQL Admins", upper(var.environment))
   security_enabled = true
 }
 
 resource "azuread_group" "sql_reader_group" {
-  display_name     = "GASCD Beta - SQL Readers - ${upper(var.environment)}"
+  display_name     = "DAP Alpha - SQL Readers - ${upper(var.environment)}"
   security_enabled = true
 }
 
 resource "azuread_group" "sql_unrestricted_reader_group" {
-  display_name     = "GASCD Beta - SQL Unrestricted Data Readers - ${upper(var.environment)}"
+  display_name     = "DAP Alpha - SQL Unrestricted Data Readers - ${upper(var.environment)}"
   security_enabled = true
 }
 
 resource "azuread_group" "sql_writer_group" {
-  display_name     = "GASCD Beta - SQL Writers - ${upper(var.environment)}"
+  display_name     = "DAP Alpha - SQL Writers - ${upper(var.environment)}"
   security_enabled = true
 }
 

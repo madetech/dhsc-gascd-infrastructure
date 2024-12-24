@@ -17,13 +17,13 @@ resource "azurerm_resource_group" "frontend_rg" {
   name     = "${var.resource_prefix}-${var.environment}-rg"
   location = var.location
 }
-resource "azurerm_user_assigned_identity" "gascd_beta_assigned_identity" {
+resource "azurerm_user_assigned_identity" "dap_alpha_assigned_identity" {
   name                = "${var.resource_prefix}-${var.environment}-ai"
   resource_group_name = azurerm_resource_group.frontend_rg.name
   location            = azurerm_resource_group.frontend_rg.location
 }
 
-resource "azurerm_service_plan" "gascd_beta_service_plan" {
+resource "azurerm_service_plan" "dap_alpha_service_plan" {
   name                = "${var.resource_prefix}-${var.environment}-service-plan"
   resource_group_name = azurerm_resource_group.frontend_rg.name
   location            = azurerm_resource_group.frontend_rg.location
@@ -36,7 +36,7 @@ resource "azurerm_linux_web_app" "dap-alpha-app" {
   name                = "${var.resource_prefix}-${var.environment}-app"
   resource_group_name = azurerm_resource_group.frontend_rg.name
   location            = var.location
-  service_plan_id     = azurerm_service_plan.gascd_beta_service_plan.id
+  service_plan_id     = azurerm_service_plan.dap_alpha_service_plan.id
 
   site_config {
     always_on                               = false
@@ -48,7 +48,7 @@ resource "azurerm_linux_web_app" "dap-alpha-app" {
   }
   identity {
     type         = "SystemAssigned, UserAssigned"
-    identity_ids = [azurerm_user_assigned_identity.gascd_beta_assigned_identity.id]
+    identity_ids = [azurerm_user_assigned_identity.dap_alpha_assigned_identity.id]
   }
   app_settings = {
     "CONTAINER_PORT"    = 8080
@@ -72,7 +72,7 @@ resource "azurerm_linux_web_app" "dap-alpha-app" {
   }
 }
 
-resource "azuread_application_redirect_uris" "app_gascd_beta_auth_redirect_uris" {
+resource "azuread_application_redirect_uris" "app_dap_alpha_auth_redirect_uris" {
   application_id = var.app_registration_app_id
   type           = "Web"
   redirect_uris = [
