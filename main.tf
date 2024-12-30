@@ -273,7 +273,7 @@ module "databricks_cluster" {
   workspace_url               = module.databricks_workspace.workspace_url
   azure_msi_flag              = var.azure_msi_flag
   workspace_id                = module.databricks_workspace.workspace_id
-  storage_account_name        = azurerm_storage_account.sc_datalake.name # Alpha lake
+  storage_account_name        = azurerm_storage_account.sc_datalake.name               # Alpha lake
   string_value                = azurerm_storage_account.sc_datalake.primary_access_key # Alpha lake
   drop_storage_account_name   = module.datalake.drop_storage_account_name
   drop_primary_access_key     = module.datalake.drop_primary_access_key
@@ -283,6 +283,7 @@ module "databricks_cluster" {
   silver_primary_access_key   = module.datalake.silver_primary_access_key
   gold_storage_account_name   = module.datalake.gold_storage_account_name
   gold_primary_access_key     = module.datalake.gold_primary_access_key
+  spark_version               = var.dbx_spark_version
 }
 
 module "databricks_workspace_ai" {
@@ -302,7 +303,7 @@ module "databricks_cluster_ai" {
   workspace_url               = module.databricks_workspace_ai.workspace_url
   azure_msi_flag              = var.azure_msi_flag
   workspace_id                = module.databricks_workspace_ai.workspace_id
-  storage_account_name        = azurerm_storage_account.sc_datalake.name # Alpha lake
+  storage_account_name        = azurerm_storage_account.sc_datalake.name               # Alpha lake
   string_value                = azurerm_storage_account.sc_datalake.primary_access_key # Alpha lake
   drop_storage_account_name   = module.datalake.drop_storage_account_name
   drop_primary_access_key     = module.datalake.drop_primary_access_key
@@ -312,14 +313,16 @@ module "databricks_cluster_ai" {
   silver_primary_access_key   = module.datalake.silver_primary_access_key
   gold_storage_account_name   = module.datalake.gold_storage_account_name
   gold_primary_access_key     = module.datalake.gold_primary_access_key
+  spark_version               = var.dbx_spark_version
+  spark_version_gpu           = var.dbx_spark_version_gpu
 }
 
 # OpenAI resources
-module "openai" { 
-  source                 = "./modules/openai"
-  environment            = var.environment
-  resource_prefix        = var.resource_prefix
-  resource_group_name    = azurerm_resource_group.rg_ai.name
+module "openai" {
+  source              = "./modules/openai"
+  environment         = var.environment
+  resource_prefix     = var.resource_prefix
+  resource_group_name = azurerm_resource_group.rg_ai.name
   # fix location for security
-  location               = "UK South"
+  location = "UK South"
 }
