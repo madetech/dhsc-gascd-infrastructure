@@ -313,6 +313,8 @@ module "databricks_cluster_ai" {
   silver_primary_access_key   = module.datalake.silver_primary_access_key
   gold_storage_account_name   = module.datalake.gold_storage_account_name
   gold_primary_access_key     = module.datalake.gold_primary_access_key
+  openai_key                  = module.openai.openai_key
+  openai_endpoint             = module.openai.openai_endpoint
   spark_version               = var.dbx_spark_version
   spark_version_gpu           = var.dbx_spark_version_gpu
 }
