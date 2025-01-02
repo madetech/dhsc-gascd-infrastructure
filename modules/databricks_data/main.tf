@@ -14,8 +14,6 @@ variable "silver_storage_account_name" {}
 variable "silver_primary_access_key" {}
 variable "gold_storage_account_name" {}
 variable "gold_primary_access_key" {}
-variable "platinum_storage_account_name" {}
-variable "platinum_primary_access_key" {}
 variable "spark_version" {}
 
 terraform {
