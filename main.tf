@@ -283,8 +283,6 @@ module "databricks_cluster" {
   silver_primary_access_key     = module.datalake.silver_primary_access_key
   gold_storage_account_name     = module.datalake.gold_storage_account_name
   gold_primary_access_key       = module.datalake.gold_primary_access_key
-  platinum_storage_account_name = module.datalake.platinum_storage_account_name
-  platinum_primary_access_key   = module.datalake.platinum_primary_access_key  
   spark_version                 = var.dbx_spark_version
 }
 
