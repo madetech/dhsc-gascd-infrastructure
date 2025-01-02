@@ -120,6 +120,24 @@ resource "azurerm_role_assignment" "gold_adf_lake_access" {
   principal_id         = var.data_factory_identity_id
 }
 
+# Create containers for the platinum storage account
+resource "azurerm_storage_container" "datalake_platinum_restricted" {
+  name                 = "restricted"
+  storage_account_name = azurerm_storage_account.platinum_datalake.name
+}
+
+resource "azurerm_storage_container" "datalake_platinum_unrestricted" {
+  name                 = "unrestricted"
+  storage_account_name = azurerm_storage_account.platinum_datalake.name
+}
+
+# Let the Data Factory access the platinum storage account
+resource "azurerm_role_assignment" "platinum_adf_lake_access" {
+  scope                = azurerm_storage_account.platinum_datalake.id
+  role_definition_name = "Storage Blob Data Contributor"
+  principal_id         = var.data_factory_identity_id
+}
+
 output "drop_storage_account_name" {
   value = azurerm_storage_account.drop_datalake.name
 }
@@ -150,4 +168,12 @@ output "gold_storage_account_name" {
 
 output "gold_primary_access_key" {
   value = azurerm_storage_account.gold_datalake.primary_access_key
+}
+
+output "platinum_storage_account_name" {
+  value = azurerm_storage_account.platinum_datalake.name
+}
+
+output "platinum_primary_access_key" {
+  value = azurerm_storage_account.platinum_datalake.primary_access_key
 }
