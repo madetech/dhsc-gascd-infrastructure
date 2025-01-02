@@ -95,7 +95,6 @@ resource "databricks_cluster" "dbx_cluster" {
     format("%s.%s.%s", "fs.azure.account.key", var.bronze_storage_account_name, "dfs.core.windows.net") = "{{secrets/infrascope/bronze_datalake_access_key}}"
     format("%s.%s.%s", "fs.azure.account.key", var.silver_storage_account_name, "dfs.core.windows.net") = "{{secrets/infrascope/silver_datalake_access_key}}"
     format("%s.%s.%s", "fs.azure.account.key", var.gold_storage_account_name, "dfs.core.windows.net")   = "{{secrets/infrascope/gold_datalake_access_key}}"
-    format("%s.%s.%s", "fs.azure.account.key", var.platinum_storage_account_name, "dfs.core.windows.net")   = "{{secrets/infrascope/platinum_primary_access_key}}"
   }
   spark_env_vars = {
     "ENV" = var.environment

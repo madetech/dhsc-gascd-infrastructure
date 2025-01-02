@@ -120,6 +120,17 @@ resource "azurerm_role_assignment" "gold_adf_lake_access" {
   principal_id         = var.data_factory_identity_id
 }
 
+# Create platinum storage account
+resource "azurerm_storage_account" "platinum_datalake" {
+  name                     = "${var.resource_prefix}stgold${var.environment}"
+  resource_group_name      = var.resource_group_name
+  location                 = var.location
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+  is_hns_enabled           = true # This enables DataLake Gen2.
+  allow_nested_items_to_be_public = false
+}
+
 # Create containers for the platinum storage account
 resource "azurerm_storage_container" "datalake_platinum_restricted" {
   name                 = "restricted"
