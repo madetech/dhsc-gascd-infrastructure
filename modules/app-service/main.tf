@@ -28,7 +28,7 @@ resource "azurerm_service_plan" "dap_alpha_service_plan" {
   resource_group_name = azurerm_resource_group.frontend_rg.name
   location            = azurerm_resource_group.frontend_rg.location
   os_type             = "Linux"
-  sku_name            = "B2"
+  sku_name            = var.environment == "dev" ? "B2" : var.environment == "test" ? "F1" : var.environment == "uat" ? "F1" : var.environment == "prod" ? "B1" : "F1"
 }
 
 
