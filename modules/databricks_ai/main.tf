@@ -119,10 +119,12 @@ resource "databricks_cluster" "dbx_ai_cpu_cluster" {
     "OPENAI_KEY"       = "{{secrets/infrascope/openai_key}}"
     "OPENAI_ENDPOINT"  = "{{secrets/infrascope/openai_endpoint}}"
   }
-  depends_on = [
-    databricks_secret.dbx_secret_bronze_datalake, databricks_secret.dbx_secret_drop_datalake,
-    databricks_secret.dbx_secret_silver_datalake, databricks_secret.dbx_secret_gold_datalake,
-  databricks_secret.dbx_secret_datalake, databricks_secret.dbx_secret_drop_datalake]
+  depends_on = [databricks_secret.dbx_secret_datalake, # Alpha lake
+    databricks_secret.dbx_secret_drop_datalake,
+    databricks_secret.dbx_secret_bronze_datalake,
+    databricks_secret.dbx_secret_silver_datalake,
+  databricks_secret.dbx_secret_gold_datalake,
+  databricks_secret.dbx_secret_platinum_datalake]
 }
 
 #resource "databricks_cluster" "dbx_ai_gpu_cluster" {

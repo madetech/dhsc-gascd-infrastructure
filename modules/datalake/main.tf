@@ -122,7 +122,7 @@ resource "azurerm_role_assignment" "gold_adf_lake_access" {
 
 # Create platinum storage account
 resource "azurerm_storage_account" "platinum_datalake" {
-  name                     = "${var.resource_prefix}stgold${var.environment}"
+  name                     = "${var.resource_prefix}stplatinum${var.environment}"
   resource_group_name      = var.resource_group_name
   location                 = var.location
   account_tier             = "Standard"

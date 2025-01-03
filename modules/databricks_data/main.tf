@@ -94,7 +94,8 @@ resource "databricks_cluster" "dbx_cluster" {
     databricks_secret.dbx_secret_drop_datalake,
     databricks_secret.dbx_secret_bronze_datalake,
     databricks_secret.dbx_secret_silver_datalake,
-  databricks_secret.dbx_secret_gold_datalake]
+  databricks_secret.dbx_secret_gold_datalake,
+  databricks_secret.dbx_secret_platinum_datalake]
   spark_conf = {
     format("%s.%s.%s", "fs.azure.account.key", var.storage_account_name, "dfs.core.windows.net")        = "{{secrets/infrascope/datalake_access_key}}" # Alpha lake
     format("%s.%s.%s", "fs.azure.account.key", var.drop_storage_account_name, "dfs.core.windows.net")   = "{{secrets/infrascope/drop_datalake_access_key}}"

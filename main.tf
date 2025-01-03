@@ -118,7 +118,7 @@ resource "azurerm_data_factory" "adf_data" {
     content {
       account_name    = "madetech"
       branch_name     = "main"
-      repository_name = "dhsc-alpha-data"
+      repository_name = "dhsc-gascd-data"
       root_folder     = "/data_factory"
     }
   }
