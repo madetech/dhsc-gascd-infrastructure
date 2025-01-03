@@ -14,6 +14,8 @@ variable "silver_storage_account_name" {}
 variable "silver_primary_access_key" {}
 variable "gold_storage_account_name" {}
 variable "gold_primary_access_key" {}
+variable "platinum_storage_account_name" {}
+variable "platinum_primary_access_key" {}
 variable "spark_version" {}
 variable "spark_version_gpu" {}
 variable "openai_key" {}
@@ -73,6 +75,12 @@ resource "databricks_secret" "dbx_secret_gold_datalake" {
   string_value = var.gold_primary_access_key
 }
 
+resource "databricks_secret" "dbx_secret_platinum_datalake" {
+  scope        = databricks_secret_scope.dbx_secret_scope.name
+  key          = "platinum_datalake_access_key"
+  string_value = var.platinum_primary_access_key
+}
+
 resource "databricks_secret" "openai_key" {
   scope        = databricks_secret_scope.dbx_secret_scope.name
   key          = "openai_key"
@@ -104,16 +112,19 @@ resource "databricks_cluster" "dbx_ai_cpu_cluster" {
     format("%s.%s.%s", "fs.azure.account.key", var.bronze_storage_account_name, "dfs.core.windows.net") = "{{secrets/infrascope/bronze_datalake_access_key}}"
     format("%s.%s.%s", "fs.azure.account.key", var.silver_storage_account_name, "dfs.core.windows.net") = "{{secrets/infrascope/silver_datalake_access_key}}"
     format("%s.%s.%s", "fs.azure.account.key", var.gold_storage_account_name, "dfs.core.windows.net")   = "{{secrets/infrascope/gold_datalake_access_key}}"
+    format("%s.%s.%s", "fs.azure.account.key", var.platinum_storage_account_name, "dfs.core.windows.net")   = "{{secrets/infrascope/platinum_primary_access_key}}"
   }
   spark_env_vars = {
     "ENV"              = var.environment
     "OPENAI_KEY"       = "{{secrets/infrascope/openai_key}}"
     "OPENAI_ENDPOINT"  = "{{secrets/infrascope/openai_endpoint}}"
   }
-  depends_on = [
-    databricks_secret.dbx_secret_bronze_datalake, databricks_secret.dbx_secret_drop_datalake,
-    databricks_secret.dbx_secret_silver_datalake, databricks_secret.dbx_secret_gold_datalake,
-  databricks_secret.dbx_secret_datalake, databricks_secret.dbx_secret_drop_datalake]
+  depends_on = [databricks_secret.dbx_secret_datalake, # Alpha lake
+    databricks_secret.dbx_secret_drop_datalake,
+    databricks_secret.dbx_secret_bronze_datalake,
+    databricks_secret.dbx_secret_silver_datalake,
+  databricks_secret.dbx_secret_gold_datalake,
+  databricks_secret.dbx_secret_platinum_datalake]
 }
 
 #resource "databricks_cluster" "dbx_ai_gpu_cluster" {
